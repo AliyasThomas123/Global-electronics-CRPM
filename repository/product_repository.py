@@ -24,6 +24,21 @@ class ProductRepository:
         products = cursor.fetchall()
         conn.close()
         return products
+    
+    def deactivate_product(pr_id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE Products SET is_active = 0 WHERE product_id = ?", (pr_id,))
+        conn.commit()
+        conn.close()
+    @staticmethod
+    def stock_update(pr_id,quantity):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE Products SET stock = stock + ? WHERE product_id = ?", (quantity,pr_id,))
+        conn.commit()
+        conn.close()    
+
     @staticmethod
     def update_stock(product_id, stock_change):
         conn = get_connection()

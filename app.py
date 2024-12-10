@@ -101,7 +101,7 @@ if menu_option == "Customer Management":
 # ------ Product Management ------
 elif menu_option == "Product Management":
     st.title("Product Management")
-    tabs = st.tabs(["Add Product", "View Products", "Deactivate Product"])
+    tabs = st.tabs(["Add Product", "View Products", "Deactivate Product" , "Update Stock"])
 
     # Tab: Add Product
     with tabs[0]:
@@ -141,6 +141,22 @@ elif menu_option == "Product Management":
             if st.button("Deactivate Product"):
                 ProductRepository.deactivate_product(selected_id)
                 st.success(f"Product ID {selected_id} deactivated successfully!")
+        else:
+            st.info("No products to deactivate.")
+    
+
+    with tabs[3]:
+        st.header("Update Stock")
+        products = ProductRepository.get_all_products()
+        if products:
+            search_term = st.text_input("Search Item")
+            filtered_pdc_df = search_dynamic_table(products , ["ID", "Name", "Price", "Quantity", "Active"],search_term)
+            st.table(filtered_pdc_df)
+            selected_id = st.selectbox("Select Product ID to Update Stock", filtered_pdc_df["ID"])
+            quantity = st.text_input("Enter Quantity")
+            if st.button("Update Product"):
+                ProductRepository.stock_update(selected_id , quantity)
+                st.success(f"Product ID {selected_id} Updated successfully!")
         else:
             st.info("No products to deactivate.")
 
